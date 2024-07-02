@@ -61,7 +61,6 @@ int read_distance(UART_HandleTypeDef *huart, uint16_t *distance) {
     uint8_t rx_buffer[9];
     HAL_StatusTypeDef status = HAL_UART_Receive(huart, rx_buffer, 9, 1000);
     if (status == HAL_OK) {
-        // Alınan veriyi kontrol et
         for (int i = 0; i < 7; i++) {
             if (rx_buffer[i] == 0x59 && rx_buffer[i+1] == 0x59) {
                 *distance = (rx_buffer[i+3] << 8) | rx_buffer[i+2];
@@ -69,7 +68,6 @@ int read_distance(UART_HandleTypeDef *huart, uint16_t *distance) {
             }
         }
     } else {
-        // UART alma işlemi başarısız oldu
         char error_msg[64];
         sprintf(error_msg, "HAL_UART_Receive failed: %d\r\n", status);
         CDC_Transmit_FS((uint8_t*)error_msg, strlen(error_msg));
